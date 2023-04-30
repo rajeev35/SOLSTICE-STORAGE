@@ -28,43 +28,51 @@ function App() {
         const signer = provider.getSigner();
         const address = await signer.getAddress();
         setAccount(address);
-        let contractAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
+        let contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
         const contract = new ethers.Contract(
           contractAddress,
           Upload.abi,
           signer
         );
-        //console.log(contract);
+        console.log(contract);
         setContract(contract);
         setProvider(provider);
       } else {
-        console.error("Metamask is not installed");
+        console.error(" Metamask is not installed ");
       }
     };
     provider && loadProvider();
   }, []);
-  
   return (
-    <div className="App">
+    <>
+      {!modalOpen && (
+        <button className="share" onClick={() => setModalOpen(true)}>
+          Share
+        </button>
+      )}
+      {modalOpen && (
+        <Modal setModalOpen={setModalOpen} contract={contract}></Modal>
+      )}
 
-    <h1 style={{color:"white"}}>SOLSTICE DRIVE</h1>
-    <div class="bg"></div>
-    <div class ="bg bg2"></div>
-    <div class ="bg bg3"></div>
+      <div className="App">
+        <h1 style={{ color: "white" }}>SOLSTICE DRIVE</h1>
+        <div class="bg"></div>
+        <div class="bg bg2"></div>
+        <div class="bg bg3"></div>
 
-    <p>Account : {account ? account: "PLEASE CONNECT TO THE METAMASK"}</p>
-    <FileUpload 
-      account ={account}
-      provider={provider}
-      contract ={contract}> 
-      </FileUpload>
-    
-     
-    </div>
-
+        <p style={{ color: "white" }}>
+          Account : {account ? account : "Metamask Not connected"}
+        </p>
+        <FileUpload
+          account={account}
+          provider={provider}
+          contract={contract}
+        ></FileUpload>
+        <Display contract={contract} account={account}></Display>
+      </div>
+    </>
   );
-  
 }
 
 export default App;
